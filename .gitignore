@@ -1,0 +1,161 @@
+# ===================
+# .NET / C# слои (Memo.API, Memo.Application, Memo.Domain, Memo.infrastructure)
+# ===================
+
+## Standard .NET ignores
+bin/
+obj/
+*.user
+*.suo
+*.cache
+*.pidb
+*.log
+*.vspscc
+*.vssscc
+.build/
+packages/
+*.nupkg
+*.snupkg
+
+## Rider / Visual Studio
+.idea/
+.vs/
+*.csproj.user
+*.dotSettings
+*.dbmdl
+*.dbproj.schema
+
+## Test results
+TestResults/
+*.coverage
+*.trx
+coverage.json
+coverage.cobertura.xml
+
+## Local configuration (ваши локальные настройки)
+appsettings.Development.json
+appsettings.Local.json
+secrets.json
+
+## Entity Framework Migrations (если используете)
+# Обычно миграции коммитят, но если у вас авто-миграции - раскомментируйте:
+# **/Migrations/*.Designer.cs
+# **/Migrations/*.cs
+
+# ===================
+# Angular (Memo.Angular)
+# ===================
+
+node_modules/
+dist/
+*.tmp
+*.rpt2_cache
+*.tsbuildinfo
+.angular/
+.npm/
+.npmrc
+
+# Angular build outputs
+**/wwwroot/
+**/browser/
+**/server/
+
+# Environment files (ваши локальные)
+src/environments/environment.local.ts
+src/environments/environment.dev.ts
+
+# ===================
+# Uno Platform (Memo.UnoApp) - мобилка
+# ===================
+
+## Android
+*.apk
+*.aab
+*.keystore
+*.jks
+**/android/local.properties
+**/android/.gradle/
+**/android/build/
+**/android/obj/
+**/android/bin/
+
+## iOS
+*.ipa
+*.app
+**/ios/bin/
+**/ios/obj/
+**/ios/Pods/
+**/ios/*.xcworkspace/xcuserdata/
+**/ios/*.xcuserdatad/
+
+## Mac Catalyst
+**/macos/bin/
+**/macos/obj/
+
+## WASM / WebAssembly (если есть)
+**/wasm/bin/
+**/wasm/obj/
+
+## Uno specific
+**/Uno.UI.*.nupkg
+**/.uno/
+
+# ===================
+# Общие системные файлы
+# ===================
+
+## OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+## Logs
+*.log
+logs/
+**/logs/
+
+## Packages
+*.7z
+*.zip
+*.rar
+*.tar.gz
+*.nupkg
+*.snupkg
+
+## Temp
+tmp/
+temp/
+**/temp/
+**/tmp/
+
+# ===================
+# Docker (если используете)
+# ===================
+
+.env
+docker-compose.override.yml
+**/docker-compose.override.yml
+
+# ===================
+# Пользовательские данные приложения
+# ===================
+
+## Базы данных (локальные)
+*.db
+*.sqlite
+*.mdf
+*.ldf
+
+## Загруженные файлы
+**/Uploads/
+**/Files/
+**/Media/
+
+# ===================
+# Инструменты анализа кода
+# ===================
+
+*.ncrunch*
+*.crunch*
+*.DotSettings.user
+*.sln.ide/
