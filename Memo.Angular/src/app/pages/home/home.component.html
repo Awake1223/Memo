@@ -1,1 +1,50 @@
-<p>home works!</p>
+<div class="row justify-content-center">
+  <div class="col-lg-8">
+    <h1 class="text-center mb-4">📝 Создать заметку</h1>
+
+    <div *ngIf="errorMessage" class="alert alert-danger">{{ errorMessage }}</div>
+
+    <div *ngIf="createdNoteCode" class="alert alert-success">
+      <h5>✅ Заметка создана!</h5>
+      <p>Ссылка для просмотра:</p>
+      <div class="input-group mb-3">
+        <input type="text" class="form-control" [value]="getNoteUrl()" readonly />
+        <button class="btn btn-outline-secondary" (click)="copyToClipboard()">📋 Копировать</button>
+      </div>
+      <a [routerLink]="['/note', createdNoteCode]" class="btn btn-primary">Открыть заметку</a>
+    </div>
+
+    <form (ngSubmit)="onSubmit()" *ngIf="!createdNoteCode">
+      <div class="mb-3">
+        <label for="content" class="form-label">Текст заметки</label>
+        <textarea id="content"
+                  class="form-control"
+                  rows="10"
+                  [(ngModel)]="content"
+                  name="content"
+                  placeholder="Введите текст вашей заметки..."
+                  required></textarea>
+        <div class="form-text">Максимальная длина: 10 000 символов</div>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Время жизни</label>
+        <div class="btn-group w-100" role="group">
+          <button type="button"
+                  class="btn"
+                  [class.btn-primary]="lifetime === option.value"
+                  [class.btn-outline-secondary]="lifetime !== option.value"
+                  *ngFor="let option of lifetimes"
+                  (click)="lifetime = option.value">
+            {{ option.label }}
+          </button>
+        </div>
+      </div>
+
+      <button type="submit" class="btn btn-success w-100" [disabled]="loading">
+        <span *ngIf="loading" class="spinner-border spinner-border-sm me-2"></span>
+        Опубликовать
+      </button>
+    </form>
+  </div>
+</div>

@@ -1,1 +1,31 @@
-<p>header works!</p>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <div class="container">
+    <a class="navbar-brand" routerLink="/">Memo</a>
+    <button class="navbar-toggler"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#navbarNav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav ms-auto">
+        <ng-container *ngIf="authService.isAuthenticated(); else authButtons">
+          <li class="nav-item">
+            <a class="nav-link" routerLink="/my-notes" routerLinkActive="active">Мои заметки</a>
+          </li>
+          <li class="nav-item">
+            <button class="btn btn-outline-light btn-sm" (click)="logout()">Выйти</button>
+          </li>
+        </ng-container>
+        <ng-template #authButtons>
+          <li class="nav-item">
+            <a class="nav-link" routerLink="/login" routerLinkActive="active">Войти</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" routerLink="/register" routerLinkActive="active">Регистрация</a>
+          </li>
+        </ng-template>
+      </ul>
+    </div>
+  </div>
+</nav>

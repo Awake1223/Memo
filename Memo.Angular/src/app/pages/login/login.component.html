@@ -1,1 +1,39 @@
-<p>login works!</p>
+<div class="row justify-content-center">
+  <div class="col-md-6 col-lg-4">
+    <div class="card shadow">
+      <div class="card-body">
+        <h2 class="text-center mb-4">Вход</h2>
+        <div *ngIf="errorMessage" class="alert alert-danger">{{ errorMessage }}</div>
+        <form (ngSubmit)="onSubmit()">
+          <div class="mb-3">
+            <label for="email" class="form-label">Email</label>
+            <input type="email"
+                   class="form-control"
+                   id="email"
+                   [(ngModel)]="email"
+                   name="email"
+                   required
+                   placeholder="example@mail.ru" />
+          </div>
+          <div class="mb-3">
+            <label for="password" class="form-label">Пароль</label>
+            <input type="password"
+                   class="form-control"
+                   id="password"
+                   [(ngModel)]="password"
+                   name="password"
+                   required
+                   placeholder="Введите пароль" />
+          </div>
+          <button type="submit" class="btn btn-primary w-100" [disabled]="loading">
+            <span *ngIf="loading" class="spinner-border spinner-border-sm me-2"></span>
+            Войти
+          </button>
+        </form>
+        <div class="text-center mt-3">
+          <a routerLink="/register">Нет аккаунта? Зарегистрируйтесь</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
