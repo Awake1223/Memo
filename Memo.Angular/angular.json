@@ -35,7 +35,11 @@
               }
             ],
             "styles": [
-              "src/styles.css"
+              "src/styles.css",
+              "node_modules/bootstrap/dist/css/bootstrap.min.css"
+            ],
+            "scripts": [
+              "node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"
             ]
           },
           "configurations": {
@@ -74,7 +78,8 @@
           },
           "defaultConfiguration": "development",
           "options": {
-            "port": 60469
+            "port": 60469,
+            "proxyConfig": "proxy.conf.json"
           }
         },
         "extract-i18n": {
@@ -95,7 +100,11 @@
               }
             ],
             "styles": [
-              "src/styles.css"
+              "src/styles.css",
+              "node_modules/bootstrap/dist/css/bootstrap.min.css"
+            ],
+            "scripts": [
+              "node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"
             ],
             "karmaConfig": "karma.conf.js"
           }
