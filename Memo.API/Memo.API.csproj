@@ -20,7 +20,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Data\Configurations\" />
+    <ProjectReference Include="..\Memo.Application\Memo.Application.csproj" />
+    <ProjectReference Include="..\Memo.Infrastructure\Memo.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>
