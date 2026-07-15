@@ -1,15 +1,10 @@
-﻿
-namespace Memo.Infrastructure.Repositories
+﻿using Memo.Domain.Entities;
+
+namespace Memo.Domain.Interfaces
 {
-    public interface IUserRepository
+    public interface IUserRepository : IRepository<UserEntity>
     {
-        Task AddAsync(UserEntity entity);
-        void Delete(UserEntity entity);
-        Task<IEnumerable<UserEntity>> GetAllAsync();
         Task<UserEntity?> GetByEmailAsync(string email);
-        Task<UserEntity?> GetByIdAsync(int id);
         Task<bool> IsEmailUniqueAsync(string email);
-        Task SaveChangesAsync();
-        void Update(UserEntity entity);
     }
 }

@@ -1,4 +1,4 @@
-﻿namespace Memo.API.Data.Entities
+﻿namespace Memo.Domain.Entities
 {
     public class UserEntity
     {

@@ -1,18 +1,12 @@
-﻿using Memo.API.Data.Entities;
+﻿using Memo.Domain.Entities;
 
-namespace Memo.Infrastructure.Repositories
+namespace Memo.Domain.Interfaces
 {
-    public interface INoteRepository
+    public interface INoteRepository : IRepository<NoteEntity>
     {
-        Task AddAsync(NoteEntity entity);
-        void Delete(NoteEntity entity);
-        Task DeleteExpiredNotesAsync();
-        Task<IEnumerable<NoteEntity>> GetAllAsync();
-        Task<NoteEntity?> GetByIdAsync(int id);
         Task<NoteEntity?> GetByShortCodeAsync(string shortCode);
         Task<IEnumerable<NoteEntity>> GetUserNotesAsync(int userId);
         Task<bool> IsShortCodeUniqueAsync(string shortCode);
-        Task SaveChangesAsync();
-        void Update(NoteEntity entity);
+        Task DeleteExpiredNotesAsync();
     }
 }

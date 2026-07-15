@@ -1,10 +1,8 @@
 ﻿using System;
-using Memo.API.Data;
-using Memo.API.Data.Entities;
 using Memo.Domain.Entities;
-using Memo.Domain.Interfaces;
-using Memo.Infrastructure.Data;
+using Memo.Domain;
 using Microsoft.EntityFrameworkCore;
+using Memo.Domain.Interfaces;
 
 namespace Memo.Infrastructure.Repositories
 {

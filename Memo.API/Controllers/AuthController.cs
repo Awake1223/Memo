@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Memo.API.DTOs.Auth;
-using Memo.API.Services;
+using Memo.Application.DTOs.Auth;
+using Memo.Application.Interfaces;
 
 namespace Memo.API.Controllers
 {
@@ -8,20 +8,21 @@ namespace Memo.API.Controllers
     [Route("api/[controller]")]
     public class AuthController : ControllerBase
     {
-        private readonly AuthService _authService;
+        private readonly IAuthService _authService;  // Используй интерфейс
 
-        public AuthController(AuthService authService)
+        public AuthController(IAuthService authService)
         {
             _authService = authService;
         }
 
         [HttpPost("register")]
-        public async Task<IActionResult> Register([FromBody] RegisterRequest request)
+        public async Task<IActionResult> Register([FromBody] RegisterDto request)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var user = await _authService.RegisterAsync(request.Email, request.Password);
+            // Передаём ВЕСЬ DTO, а не отдельные поля
+            var user = await _authService.RegisterAsync(request);
             if (user == null)
                 return BadRequest(new { message = "User with this email already exists" });
 
@@ -29,28 +30,24 @@ namespace Memo.API.Controllers
         }
 
         [HttpPost("login")]
-        public async Task<IActionResult> Login([FromBody] LoginRequest request)
+        public async Task<IActionResult> Login([FromBody] LoginDto request)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var token = await _authService.LoginAsync(request.Email, request.Password);
+            // Передаём ВЕСЬ DTO, а не отдельные поля
+            var token = await _authService.LoginAsync(request);
             if (token == null)
                 return Unauthorized(new { message = "Invalid email or password" });
 
-            return Ok(new AuthResponse
+            var user = await _authService.GetUserByEmailAsync(request.Email);
+            return Ok(new AuthResponseDto
             {
                 Token = token,
                 Email = request.Email,
-                UserId = await GetUserIdByEmail(request.Email),
+                UserId = user?.Id ?? 0,
                 ExpiresAt = DateTime.UtcNow.AddDays(7)
             });
-        }
-
-        private async Task<int> GetUserIdByEmail(string email)
-        {
-            var user = await _authService.GetUserByEmailAsync(email);
-            return user?.Id ?? 0;
         }
     }
 }

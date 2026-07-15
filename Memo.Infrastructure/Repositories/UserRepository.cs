@@ -1,4 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Memo.Domain.Entities;
+using Memo.Domain.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace Memo.Infrastructure.Repositories
 {

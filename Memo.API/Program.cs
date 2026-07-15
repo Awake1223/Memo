@@ -1,17 +1,25 @@
 using System.Text;
-using Memo.API.Data;
-using Memo.API.Services;
+using Memo.Application.Background;
+using Memo.Application.Interfaces;
+using Memo.Application.Services;
+using Memo.Domain.Interfaces;
+using Memo.Infrastructure;
+using Memo.Infrastructure.Repositories;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi;
 using Microsoft.OpenApi.Models;  
 
+
 var builder = WebApplication.CreateBuilder(args);
 
 // DbContext
 builder.Services.AddDbContext<MemoDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<INoteRepository, NoteRepository>();
 
 // JWT
 var jwtKey = builder.Configuration["Jwt:Key"] ?? throw new Exception("JWT Key is not configured");
@@ -64,9 +72,10 @@ builder.Services.AddSwaggerGen(c =>
 });
 
 // Services
-builder.Services.AddScoped<AuthService>();
-builder.Services.AddScoped<NoteService>();
-builder.Services.AddHostedService<CleanupService>();
+builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<INoteService, NoteService>();
+
+builder.Services.AddHostedService<CleanupBackgroundService>();
 
 var app = builder.Build();
 

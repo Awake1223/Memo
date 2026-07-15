@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Reflection.Emit;
-using Memo.API.Data.Entities;
+using Memo.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
-namespace Memo.API.Data
+namespace Memo.Infrastructure
 {
     public class MemoDbContext : DbContext
     {

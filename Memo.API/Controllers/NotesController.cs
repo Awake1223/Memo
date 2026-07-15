@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Memo.API.DTOs.Notes;
-using Memo.API.Services;
 using System.Security.Claims;
+using Memo.Application.DTOs.Notes;    // <-- ПРАВИЛЬНЫЙ using
+using Memo.Application.Interfaces;     // <-- INoteService
 
 namespace Memo.API.Controllers
 {
@@ -10,24 +10,17 @@ namespace Memo.API.Controllers
     [Route("api/[controller]")]
     public class NotesController : ControllerBase
     {
-        private readonly NoteService _noteService;
-        private readonly AuthService _authService;
+        private readonly INoteService _noteService;
 
-        public NotesController(NoteService noteService, AuthService authService)
+        public NotesController(INoteService noteService)
         {
             _noteService = noteService;
-            _authService = authService;
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateNote([FromBody] CreateNoteRequest request)
+        public async Task<IActionResult> CreateNote([FromBody] CreateNoteDto request)
         {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
-
             int? userId = null;
-
-            // Если пользователь авторизован, привязываем заметку к нему
             if (User.Identity?.IsAuthenticated == true)
             {
                 var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
@@ -46,7 +39,7 @@ namespace Memo.API.Controllers
             if (note == null)
                 return NotFound(new { message = "Note not found or expired" });
 
-            return Ok(new NoteResponse
+            return Ok(new NoteResponseDto
             {
                 ShortCode = note.ShortCode,
                 Content = note.Content,
@@ -60,32 +53,18 @@ namespace Memo.API.Controllers
         [HttpGet("my")]
         public async Task<IActionResult> GetMyNotes()
         {
-            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            if (!int.TryParse(userIdClaim, out var userId))
-                return Unauthorized();
-
+            var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "0");
             var notes = await _noteService.GetUserNotesAsync(userId);
-            var response = notes.Select(n => new NoteResponse
-            {
-                ShortCode = n.ShortCode,
-                Content = n.Content.Length > 100 ? n.Content[..100] + "..." : n.Content,
-                ExpiresAt = n.ExpiresAt,
-                CreatedAt = n.CreatedAt,
-                IsExpired = n.ExpiresAt.HasValue && n.ExpiresAt.Value < DateTime.UtcNow
-            });
-
-            return Ok(response);
+            return Ok(notes);
         }
 
         [Authorize]
         [HttpDelete("{shortCode}")]
         public async Task<IActionResult> DeleteNote(string shortCode)
         {
-            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            if (!int.TryParse(userIdClaim, out var userId))
-                return Unauthorized();
-
+            var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "0");
             var result = await _noteService.DeleteNoteAsync(shortCode, userId);
+
             if (!result)
                 return NotFound(new { message = "Note not found or you don't have permission" });
 
