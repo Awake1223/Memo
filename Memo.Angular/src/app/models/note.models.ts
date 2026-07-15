@@ -7,6 +7,7 @@ export enum NoteLifetime {
 export interface CreateNoteRequest {
   content: string;
   lifetime: NoteLifetime;
+  isBurnAfterReading?: boolean;
 }
 
 export interface NoteResponse {
@@ -15,6 +16,7 @@ export interface NoteResponse {
   expiresAt: string | null;
   createdAt: string;
   isExpired: boolean;
+  isBurnAfterReading?: boolean;
 }
 
 export interface CreateNoteResponse {

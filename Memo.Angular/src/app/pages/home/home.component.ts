@@ -15,6 +15,7 @@ export class HomeComponent {
   loading = false;
   errorMessage = '';
   createdNoteCode: string | null = null;
+  isBurnAfterReading = false; 
 
   lifetimes = [
     { value: NoteLifetime.OneHour, label: '1 час' },
@@ -39,7 +40,8 @@ export class HomeComponent {
 
     this.noteService.createNote({
       content: this.content,
-      lifetime: this.lifetime
+      lifetime: this.lifetime,
+      isBurnAfterReading: this.isBurnAfterReading
     }).subscribe({
       next: (response) => {
         this.createdNoteCode = response.shortCode;

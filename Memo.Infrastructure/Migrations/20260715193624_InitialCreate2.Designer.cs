@@ -3,17 +3,20 @@ using System;
 using Memo.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
-namespace Memo.API.Migrations
+namespace Memo.Infrastructure.Migrations
 {
     [DbContext(typeof(MemoDbContext))]
-    partial class MemoDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260715193624_InitialCreate2")]
+    partial class InitialCreate2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -22,7 +25,7 @@ namespace Memo.API.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("Memo.API.Data.Entities.NoteEntity", b =>
+            modelBuilder.Entity("Memo.Domain.Entities.NoteEntity", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -47,6 +50,9 @@ namespace Memo.API.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
                     b.Property<int?>("UserId")
                         .HasColumnType("integer");
 
@@ -60,7 +66,7 @@ namespace Memo.API.Migrations
                     b.ToTable("Notes");
                 });
 
-            modelBuilder.Entity("Memo.API.Data.Entities.UserEntity", b =>
+            modelBuilder.Entity("Memo.Domain.Entities.UserEntity", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -84,9 +90,9 @@ namespace Memo.API.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("Memo.API.Data.Entities.NoteEntity", b =>
+            modelBuilder.Entity("Memo.Domain.Entities.NoteEntity", b =>
                 {
-                    b.HasOne("Memo.API.Data.Entities.UserEntity", "User")
+                    b.HasOne("Memo.Domain.Entities.UserEntity", "User")
                         .WithMany("Notes")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.SetNull);
@@ -94,7 +100,7 @@ namespace Memo.API.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("Memo.API.Data.Entities.UserEntity", b =>
+            modelBuilder.Entity("Memo.Domain.Entities.UserEntity", b =>
                 {
                     b.Navigation("Notes");
                 });

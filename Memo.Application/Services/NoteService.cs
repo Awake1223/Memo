@@ -16,9 +16,9 @@ namespace Memo.Application.Services
             _userRepository = userRepository;
         }
 
-        public async Task<NoteEntity> CreateNoteAsync(string content, NoteLifetime lifetime, int? userId = null)
+        public async Task<NoteEntity> CreateNoteAsync(CreateNoteDto request, int? userId = null)
         {
-            var expiresAt = lifetime switch
+            var expiresAt = request.Lifetime switch
             {
                 NoteLifetime.OneHour => DateTime.UtcNow.AddHours(1),
                 NoteLifetime.OneDay => DateTime.UtcNow.AddDays(1),
@@ -31,10 +31,11 @@ namespace Memo.Application.Services
             var note = new NoteEntity
             {
                 ShortCode = shortCode,
-                Content = content,
+                Content = request.Content,
                 UserId = userId,
                 ExpiresAt = expiresAt,
-                CreatedAt = DateTime.UtcNow
+                CreatedAt = DateTime.UtcNow,
+                IsBurnAfterReading = request.IsBurnAfterReading  // <-- ДОБАВИТЬ
             };
 
             await _noteRepository.AddAsync(note);
@@ -46,14 +47,22 @@ namespace Memo.Application.Services
         public async Task<NoteEntity?> GetNoteByShortCodeAsync(string shortCode)
         {
             var note = await _noteRepository.GetByShortCodeAsync(shortCode);
-            if (note == null)
+            if (note == null || note.IsDeleted)
                 return null;
 
+            // Проверка истечения
             if (note.ExpiresAt.HasValue && note.ExpiresAt.Value < DateTime.UtcNow)
             {
                 note.IsDeleted = true;
                 await _noteRepository.SaveChangesAsync();
                 return null;
+            }
+
+            // 🔥 Сожжение после прочтения
+            if (note.IsBurnAfterReading)
+            {
+                note.IsDeleted = true;
+                await _noteRepository.SaveChangesAsync();
             }
 
             return note;
@@ -104,6 +113,22 @@ namespace Memo.Application.Services
             }
 
             throw new InvalidOperationException("Failed to generate unique short code");
+        }
+
+        public async Task<bool> UpdateNoteAsync(string shortCode, int userId, string newContent)
+        {
+            var note = await _noteRepository.GetByShortCodeAsync(shortCode, true);
+            if (note == null || note.UserId != userId || note.IsDeleted)
+                return false;
+
+            // Проверяем, не истекла ли заметка
+            if (note.ExpiresAt.HasValue && note.ExpiresAt.Value < DateTime.UtcNow)
+                return false;
+
+            note.Content = newContent;
+            note.UpdatedAt = DateTime.UtcNow; // Добавь это поле в NoteEntity
+            await _noteRepository.SaveChangesAsync();
+            return true;
         }
     }
 }

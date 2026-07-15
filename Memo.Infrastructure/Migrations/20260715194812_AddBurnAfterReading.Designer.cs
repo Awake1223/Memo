@@ -9,11 +9,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
-namespace Memo.API.Migrations
+namespace Memo.Infrastructure.Migrations
 {
     [DbContext(typeof(MemoDbContext))]
-    [Migration("20260704195639_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20260715194812_AddBurnAfterReading")]
+    partial class AddBurnAfterReading
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -25,7 +25,7 @@ namespace Memo.API.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("Memo.API.Data.Entities.NoteEntity", b =>
+            modelBuilder.Entity("Memo.Domain.Entities.NoteEntity", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -43,12 +43,18 @@ namespace Memo.API.Migrations
                     b.Property<DateTime?>("ExpiresAt")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<bool>("IsBurnAfterReading")
+                        .HasColumnType("boolean");
+
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("boolean");
 
                     b.Property<string>("ShortCode")
                         .IsRequired()
                         .HasColumnType("text");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<int?>("UserId")
                         .HasColumnType("integer");
@@ -63,7 +69,7 @@ namespace Memo.API.Migrations
                     b.ToTable("Notes");
                 });
 
-            modelBuilder.Entity("Memo.API.Data.Entities.UserEntity", b =>
+            modelBuilder.Entity("Memo.Domain.Entities.UserEntity", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -87,9 +93,9 @@ namespace Memo.API.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("Memo.API.Data.Entities.NoteEntity", b =>
+            modelBuilder.Entity("Memo.Domain.Entities.NoteEntity", b =>
                 {
-                    b.HasOne("Memo.API.Data.Entities.UserEntity", "User")
+                    b.HasOne("Memo.Domain.Entities.UserEntity", "User")
                         .WithMany("Notes")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.SetNull);
@@ -97,7 +103,7 @@ namespace Memo.API.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("Memo.API.Data.Entities.UserEntity", b =>
+            modelBuilder.Entity("Memo.Domain.Entities.UserEntity", b =>
                 {
                     b.Navigation("Notes");
                 });

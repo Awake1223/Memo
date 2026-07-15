@@ -59,5 +59,14 @@ namespace Memo.Infrastructure.Repositories
 
             await _context.SaveChangesAsync();
         }
+
+        public async Task<NoteEntity?> GetByShortCodeAsync(string shortCode, bool includeDeleted = false)
+        {
+            var query = _context.Notes.AsQueryable();
+            if (!includeDeleted)
+                query = query.Where(n => !n.IsDeleted);
+
+            return await query.FirstOrDefaultAsync(n => n.ShortCode == shortCode);
+        }
     }
 }

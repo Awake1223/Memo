@@ -6,10 +6,11 @@ namespace Memo.Application.Interfaces
     public interface INoteService
     {
         Task CleanupExpiredNotesAsync();
-        Task<NoteEntity> CreateNoteAsync(string content, NoteLifetime lifetime, int? userId = null);
+        Task<NoteEntity> CreateNoteAsync(CreateNoteDto request, int? userId = null);
         Task<bool> DeleteNoteAsync(string shortCode, int userId);
         Task<string> GenerateUniqueShortCodeAsync();
         Task<NoteEntity?> GetNoteByShortCodeAsync(string shortCode);
         Task<IEnumerable<NoteResponseDto>> GetUserNotesAsync(int userId);
+        Task<bool> UpdateNoteAsync(string shortCode, int userId, string newContent);
     }
 }

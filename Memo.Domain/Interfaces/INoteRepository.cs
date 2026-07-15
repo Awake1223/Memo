@@ -8,5 +8,7 @@ namespace Memo.Domain.Interfaces
         Task<IEnumerable<NoteEntity>> GetUserNotesAsync(int userId);
         Task<bool> IsShortCodeUniqueAsync(string shortCode);
         Task DeleteExpiredNotesAsync();
+
+        Task<NoteEntity?> GetByShortCodeAsync(string shortCode, bool includeDeleted = false);
     }
 }

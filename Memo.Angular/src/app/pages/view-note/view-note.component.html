@@ -20,8 +20,8 @@
         <small class="text-muted">Создано: {{ formatDate(note.createdAt) }}</small>
       </div>
       <div class="card-body">
-        <div class="note-content" style="white-space: pre-wrap; word-wrap: break-word;">
-          {{ note.content }}
+        <div class="note-content">
+          <markdown [data]="note.content"></markdown>
         </div>
         <div *ngIf="note.expiresAt" class="mt-3 text-muted small">
           ⏰ Истекает: {{ formatDate(note.expiresAt) }}

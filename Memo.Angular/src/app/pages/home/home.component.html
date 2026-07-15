@@ -3,7 +3,14 @@
     <h1 class="text-center mb-4">📝 Создать заметку</h1>
 
     <div *ngIf="errorMessage" class="alert alert-danger">{{ errorMessage }}</div>
-
+    <div class="form-text">
+      Поддерживается <strong>Markdown</strong>:
+      <code>**жирный**</code>,
+      <code>*курсив*</code>,
+      <code># Заголовки</code>,
+      <code>- списки</code>,
+      <code>`код`</code>
+    </div>
     <div *ngIf="createdNoteCode" class="alert alert-success">
       <h5>✅ Заметка создана!</h5>
       <p>Ссылка для просмотра:</p>
@@ -40,7 +47,19 @@
           </button>
         </div>
       </div>
-
+      <div class="mb-3 form-check">
+        <input type="checkbox"
+               class="form-check-input"
+               id="burnAfterReading"
+               [(ngModel)]="isBurnAfterReading"
+               name="isBurnAfterReading" />
+        <label class="form-check-label" for="burnAfterReading">
+          🔥 Сжечь после прочтения
+        </label>
+        <small class="form-text d-block text-muted">
+          Заметка будет удалена после первого просмотра
+        </small>
+      </div>
       <button type="submit" class="btn btn-success w-100" [disabled]="loading">
         <span *ngIf="loading" class="spinner-border spinner-border-sm me-2"></span>
         Опубликовать

@@ -28,7 +28,8 @@ namespace Memo.API.Controllers
                     userId = parsedUserId;
             }
 
-            var note = await _noteService.CreateNoteAsync(request.Content, request.Lifetime, userId);
+            // ✅ Передаём ВЕСЬ DTO, а не отдельные поля
+            var note = await _noteService.CreateNoteAsync(request, userId);
             return Ok(new { shortCode = note.ShortCode, expiresAt = note.ExpiresAt });
         }
 
@@ -69,6 +70,19 @@ namespace Memo.API.Controllers
                 return NotFound(new { message = "Note not found or you don't have permission" });
 
             return Ok(new { message = "Note deleted successfully" });
+        }
+
+        [Authorize]
+        [HttpPut("{shortCode}")]
+        public async Task<IActionResult> UpdateNote(string shortCode, [FromBody] UpdateNoteDto request)
+        {
+            var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "0");
+            var result = await _noteService.UpdateNoteAsync(shortCode, userId, request.Content);
+
+            if (!result)
+                return NotFound(new { message = "Note not found, expired, or you don't have permission" });
+
+            return Ok(new { message = "Note updated successfully" });
         }
     }
 }

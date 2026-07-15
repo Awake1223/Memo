@@ -4,6 +4,7 @@
     {
         public string Content { get; set; } = string.Empty;
         public NoteLifetime Lifetime { get; set; }
+        public bool IsBurnAfterReading { get; set; } = false;
     }
 
     public enum NoteLifetime
