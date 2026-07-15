@@ -20,6 +20,7 @@ builder.Services.AddDbContext<MemoDbContext>(options =>
 
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<INoteRepository, NoteRepository>();
+builder.Services.AddScoped<ITagRepository, TagRepository>();
 
 // JWT
 var jwtKey = builder.Configuration["Jwt:Key"] ?? throw new Exception("JWT Key is not configured");
@@ -74,8 +75,11 @@ builder.Services.AddSwaggerGen(c =>
 // Services
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<INoteService, NoteService>();
+builder.Services.AddScoped<ITagService, TagService>();
+builder.Services.AddScoped<ISearchService, SearchService>();
 
 builder.Services.AddHostedService<CleanupBackgroundService>();
+builder.Services.AddHostedService<TrendingNotesService>();
 
 var app = builder.Build();
 

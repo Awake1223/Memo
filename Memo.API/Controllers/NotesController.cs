@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
-using Memo.Application.DTOs.Notes;    // <-- ПРАВИЛЬНЫЙ using
-using Memo.Application.Interfaces;     // <-- INoteService
+using Memo.Application.DTOs.Notes;   
+using Memo.Application.Interfaces;    
 
 namespace Memo.API.Controllers
 {
@@ -46,7 +46,8 @@ namespace Memo.API.Controllers
                 Content = note.Content,
                 ExpiresAt = note.ExpiresAt,
                 CreatedAt = note.CreatedAt,
-                IsExpired = note.ExpiresAt.HasValue && note.ExpiresAt.Value < DateTime.UtcNow
+                IsExpired = note.ExpiresAt.HasValue && note.ExpiresAt.Value < DateTime.UtcNow,
+                ViewCount = note.ViewCount
             });
         }
 

@@ -68,5 +68,65 @@ namespace Memo.Infrastructure.Repositories
 
             return await query.FirstOrDefaultAsync(n => n.ShortCode == shortCode);
         }
+
+        public async Task<IEnumerable<NoteEntity>> SearchNotesAsync(
+            int userId,
+            string? query,
+            string? tag,
+            int page,
+            int pageSize,
+            string sortBy)
+        {
+            var queryable = _context.Notes
+                .Include(n => n.NoteTags)
+                .ThenInclude(nt => nt.Tag)
+                .Where(n => n.UserId == userId && !n.IsDeleted);
+
+            // Поиск по тексту (полнотекстовый)
+            if (!string.IsNullOrWhiteSpace(query))
+            {
+                queryable = queryable.Where(n =>
+                    EF.Functions.ILike(n.Content, $"%{query}%") ||
+                    EF.Functions.ILike(n.ShortCode, $"%{query}%")
+                );
+            }
+
+            // Фильтр по тегу
+            if (!string.IsNullOrWhiteSpace(tag))
+            {
+                var normalizedTag = tag.TrimStart('#').ToLowerInvariant();
+                queryable = queryable.Where(n =>
+                    n.NoteTags.Any(nt => nt.Tag.Name == normalizedTag)
+                );
+            }
+
+            // Сортировка
+            queryable = sortBy?.ToLowerInvariant() switch
+            {
+                "newest" => queryable.OrderByDescending(n => n.CreatedAt),
+                "popular" => queryable.OrderByDescending(n => n.ViewCount),
+                _ => queryable.OrderByDescending(n => n.CreatedAt) // relevance по умолчанию
+            };
+
+            // Пагинация
+            var skip = (page - 1) * pageSize;
+            var result = await queryable
+                .Skip(skip)
+                .Take(pageSize)
+                .ToListAsync();
+
+            return result;
+        }
+
+        public async Task<IEnumerable<NoteEntity>> GetTrendingNotesAsync(int limit)
+        {
+            var since = DateTime.UtcNow.AddHours(-24);
+
+            return await _context.Notes
+                .Where(n => !n.IsDeleted && n.CreatedAt >= since)
+                .OrderByDescending(n => n.ViewCount)
+                .Take(limit)
+                .ToListAsync();
+        }
     }
 }

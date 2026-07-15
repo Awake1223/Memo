@@ -1,0 +1,21 @@
+<div *ngIf="loading" class="text-center">
+  <div class="spinner-border spinner-border-sm"></div>
+</div>
+
+<div *ngIf="error" class="alert alert-warning small">{{ error }}</div>
+
+<div *ngIf="!loading && tags.length > 0" class="tag-cloud">
+  <a *ngFor="let tag of tags"
+     class="tag-item"
+     [style.font-size.px]="getFontSize(tag.count)"
+     [style.color]="getColor(tag.count)"
+     [routerLink]="['/my-notes']"
+     [queryParams]="{ tag: tag.name }">
+    #{{ tag.name }}
+    <span class="tag-count">({{ tag.count }})</span>
+  </a>
+</div>
+
+<div *ngIf="!loading && tags.length === 0" class="text-muted small">
+  Нет популярных тегов
+</div>

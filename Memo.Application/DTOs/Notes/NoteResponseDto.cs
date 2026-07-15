@@ -7,5 +7,6 @@
         public DateTime? ExpiresAt { get; set; }
         public DateTime CreatedAt { get; set; }
         public bool IsExpired { get; set; }
+        public int ViewCount { get; set; }
     }
 }

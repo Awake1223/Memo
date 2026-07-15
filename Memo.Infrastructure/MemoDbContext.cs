@@ -21,7 +21,8 @@ namespace Memo.Infrastructure
 
         public DbSet<UserEntity> Users { get; set; }
         public DbSet<NoteEntity> Notes { get; set; }
-
+        public DbSet<TagEntity> Tags { get; set; }          
+        public DbSet<NoteTagEntity> NoteTags { get; set; }  
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             // Уникальный индекс для ShortCode
@@ -40,7 +41,30 @@ namespace Memo.Infrastructure
                 .HasForeignKey(n => n.UserId)
                 .OnDelete(DeleteBehavior.SetNull); // если пользователь удалён, заметки остаются анонимными
 
+            // Уникальный индекс для тегов (чтобы не было дублей)
+            modelBuilder.Entity<TagEntity>()
+                .HasIndex(t => t.Name)
+                .IsUnique();
+
+            // Составной ключ для связи Note-Tag
+            modelBuilder.Entity<NoteTagEntity>()
+                .HasKey(nt => new { nt.NoteId, nt.TagId });
+
+            // Связи
+            modelBuilder.Entity<NoteTagEntity>()
+                .HasOne(nt => nt.Note)
+                .WithMany(n => n.NoteTags)
+                .HasForeignKey(nt => nt.NoteId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<NoteTagEntity>()
+                .HasOne(nt => nt.Tag)
+                .WithMany(t => t.NoteTags)
+                .HasForeignKey(nt => nt.TagId)
+                .OnDelete(DeleteBehavior.Cascade);
+
             base.OnModelCreating(modelBuilder);
+
         }
     }
 }

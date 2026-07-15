@@ -10,5 +10,16 @@ namespace Memo.Domain.Interfaces
         Task DeleteExpiredNotesAsync();
 
         Task<NoteEntity?> GetByShortCodeAsync(string shortCode, bool includeDeleted = false);
+
+        Task<IEnumerable<NoteEntity>> SearchNotesAsync(
+            int userId,
+            string? query,
+            string? tag,
+            int page,
+            int pageSize,
+            string sortBy
+        );
+
+        Task<IEnumerable<NoteEntity>> GetTrendingNotesAsync(int limit);
     }
 }

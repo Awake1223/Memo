@@ -1,3 +1,5 @@
+import { TagDto } from "./tag.models";
+
 export enum NoteLifetime {
   OneHour = 1,
   OneDay = 2,
@@ -17,6 +19,8 @@ export interface NoteResponse {
   createdAt: string;
   isExpired: boolean;
   isBurnAfterReading?: boolean;
+  viewCount: number;
+  tags?: TagDto[];
 }
 
 export interface CreateNoteResponse {

@@ -5,24 +5,63 @@
       <a routerLink="/" class="btn btn-success">+ Создать</a>
     </div>
 
+    <!-- ПОИСК И ФИЛЬТРЫ -->
+    <div class="row g-2 mb-3">
+      <div class="col-md-4">
+        <div class="input-group">
+          <span class="input-group-text">🔍</span>
+          <input type="text"
+                 class="form-control"
+                 placeholder="Поиск по тексту..."
+                 [(ngModel)]="searchQuery"
+                 (keyup.enter)="onSearch()" />
+        </div>
+      </div>
+      <div class="col-md-3">
+        <select class="form-select" [(ngModel)]="sortBy" (change)="onSearch()">
+          <option value="newest">📅 По дате</option>
+          <option value="popular">🔥 По популярности</option>
+          <option value="relevance">🎯 По релевантности</option>
+        </select>
+      </div>
+      <div class="col-md-2">
+        <button class="btn btn-primary w-100" (click)="onSearch()">Поиск</button>
+      </div>
+      <div class="col-md-3">
+        <button class="btn btn-outline-secondary w-100" (click)="clearFilters()">
+          ✖️ Очистить фильтры
+        </button>
+      </div>
+    </div>
+
+    <!-- Фильтр по тегу -->
+    <div *ngIf="selectedTag" class="alert alert-info d-flex justify-content-between align-items-center">
+      <span>🏷️ Фильтр по тегу: <strong>#{{ selectedTag }}</strong></span>
+      <button class="btn-close" (click)="clearFilters()"></button>
+    </div>
+
+    <!-- Состояние загрузки -->
     <div *ngIf="loading" class="text-center my-5">
       <div class="spinner-border text-primary" role="status">
         <span class="visually-hidden">Загрузка...</span>
       </div>
     </div>
 
+    <!-- Сообщение об ошибке -->
     <div *ngIf="errorMessage" class="alert alert-danger">{{ errorMessage }}</div>
 
+    <!-- Пустой список -->
     <div *ngIf="!loading && notes.length === 0" class="text-center py-5">
       <h4>🤷 У вас пока нет заметок</h4>
       <a routerLink="/" class="btn btn-primary mt-3">Создать первую заметку</a>
     </div>
 
+    <!-- Список заметок -->
     <div class="list-group">
       <div *ngFor="let note of notes" class="list-group-item list-group-item-action">
         <div class="d-flex justify-content-between align-items-start">
           <div class="flex-grow-1 me-3">
-            <div class="d-flex align-items-center gap-2">
+            <div class="d-flex align-items-center gap-2 flex-wrap">
               <strong>
                 <a [routerLink]="['/note', note.shortCode]" class="text-decoration-none">
                   #{{ note.shortCode }}
@@ -33,18 +72,43 @@
                     [class.bg-danger]="getStatusClass(note.expiresAt) === 'text-danger'">
                 {{ getStatusLabel(note.expiresAt) }}
               </span>
+              <span *ngIf="note.isBurnAfterReading" class="badge bg-warning text-dark">
+                🔥 Сгорит
+              </span>
             </div>
+
             <div class="text-muted small mt-1">{{ note.content }}</div>
+
+            <!-- ТЕГИ -->
+            <div *ngIf="note.tags && note.tags.length > 0" class="mt-1">
+              <span *ngFor="let tag of note.tags"
+                    class="badge me-1"
+                    [class.bg-primary]="getTagClass(tag.name) === 'primary'"
+                    [class.bg-secondary]="getTagClass(tag.name) === 'secondary'"
+                    [class.bg-success]="getTagClass(tag.name) === 'success'"
+                    [class.bg-danger]="getTagClass(tag.name) === 'danger'"
+                    [class.bg-warning]="getTagClass(tag.name) === 'warning'"
+                    [class.bg-info]="getTagClass(tag.name) === 'info'"
+                    style="cursor: pointer"
+                    (click)="selectTag(tag.name)">
+                #{{ tag.name }}
+              </span>
+            </div>
+
             <div class="text-muted small">
               📅 {{ formatDate(note.createdAt) }}
               <span *ngIf="note.expiresAt">• ⏰ {{ formatDate(note.expiresAt) }}</span>
+              <span>• 👁️ {{ note.viewCount || 0 }}</span>  
             </div>
           </div>
+
           <div class="btn-group">
             <a [routerLink]="['/edit', note.shortCode]" class="btn btn-outline-primary btn-sm">
               ✏️
             </a>
-            <a [routerLink]="['/note', note.shortCode]" class="btn btn-outline-primary btn-sm">👁️</a>
+            <a [routerLink]="['/note', note.shortCode]" class="btn btn-outline-primary btn-sm">
+              👁️
+            </a>
             <button class="btn btn-outline-danger btn-sm"
                     (click)="deleteNote(note.shortCode)"
                     [disabled]="deletingCode === note.shortCode">
@@ -54,6 +118,27 @@
           </div>
         </div>
       </div>
+    </div>
+
+    <!-- ПАГИНАЦИЯ -->
+    <div *ngIf="totalPages > 1" class="d-flex justify-content-between align-items-center mt-3">
+      <span class="text-muted small">
+        Всего: {{ totalNotes }} заметок
+      </span>
+      <nav>
+        <ul class="pagination pagination-sm mb-0">
+          <li class="page-item" [class.disabled]="currentPage === 1">
+            <button class="page-link" (click)="goToPage(currentPage - 1)">«</button>
+          </li>
+          <li class="page-item" *ngFor="let p of [].constructor(totalPages); let i = index"
+              [class.active]="currentPage === i + 1">
+            <button class="page-link" (click)="goToPage(i + 1)">{{ i + 1 }}</button>
+          </li>
+          <li class="page-item" [class.disabled]="currentPage === totalPages">
+            <button class="page-link" (click)="goToPage(currentPage + 1)">»</button>
+          </li>
+        </ul>
+      </nav>
     </div>
   </div>
 </div>

@@ -11,6 +11,8 @@
         public DateTime UpdatedAt { get; set; }
         public bool IsDeleted { get; set; } = false;
         public bool IsBurnAfterReading { get; set; } = false;
+        public int ViewCount { get; set; } = 0;
         public UserEntity? User { get; set; }
+        public List<NoteTagEntity> NoteTags { get; set; } = new();
     }
 }

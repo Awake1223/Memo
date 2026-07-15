@@ -9,11 +9,13 @@ namespace Memo.Application.Services
     {
         private readonly INoteRepository _noteRepository;
         private readonly IUserRepository _userRepository;
+        private readonly ITagService _tagService;
 
-        public NoteService(INoteRepository noteRepository, IUserRepository userRepository)
+        public NoteService(INoteRepository noteRepository, IUserRepository userRepository, ITagService tagService)
         {
             _noteRepository = noteRepository;
             _userRepository = userRepository;
+            _tagService = tagService;
         }
 
         public async Task<NoteEntity> CreateNoteAsync(CreateNoteDto request, int? userId = null)
@@ -41,6 +43,10 @@ namespace Memo.Application.Services
             await _noteRepository.AddAsync(note);
             await _noteRepository.SaveChangesAsync();
 
+            await _tagService.ExtractAndSaveTagsAsync(note, request.Content);
+
+            return note;
+
             return note;
         }
 
@@ -58,7 +64,12 @@ namespace Memo.Application.Services
                 return null;
             }
 
-            // 🔥 Сожжение после прочтения
+            // ✅ УВЕЛИЧИВАЕМ СЧЁТЧИК ПРОСМОТРОВ
+            note.ViewCount++;
+            note.UpdatedAt = DateTime.UtcNow;
+            await _noteRepository.SaveChangesAsync();
+
+            // Сожжение после прочтения
             if (note.IsBurnAfterReading)
             {
                 note.IsDeleted = true;
@@ -74,10 +85,11 @@ namespace Memo.Application.Services
             return notes.Select(n => new NoteResponseDto
             {
                 ShortCode = n.ShortCode,
-                Content = n.Content.Length > 100 ? n.Content.Substring(0, 100) + "..." : n.Content,
+                Content = n.Content.Length > 200 ? n.Content[..200] + "..." : n.Content,
                 ExpiresAt = n.ExpiresAt,
                 CreatedAt = n.CreatedAt,
-                IsExpired = n.ExpiresAt.HasValue && n.ExpiresAt.Value < DateTime.UtcNow
+                IsExpired = n.ExpiresAt.HasValue && n.ExpiresAt.Value < DateTime.UtcNow,
+                ViewCount = n.ViewCount  // <-- ДОЛЖНО БЫТЬ
             });
         }
 
@@ -121,12 +133,11 @@ namespace Memo.Application.Services
             if (note == null || note.UserId != userId || note.IsDeleted)
                 return false;
 
-            // Проверяем, не истекла ли заметка
             if (note.ExpiresAt.HasValue && note.ExpiresAt.Value < DateTime.UtcNow)
                 return false;
 
             note.Content = newContent;
-            note.UpdatedAt = DateTime.UtcNow; // Добавь это поле в NoteEntity
+            note.UpdatedAt = DateTime.UtcNow;
             await _noteRepository.SaveChangesAsync();
             return true;
         }
