@@ -1,0 +1,26 @@
+<div class="row justify-content-center">
+  <div class="col-lg-8">
+    <h2 class="mb-4">✏️ Редактировать заметку #{{ shortCode }}</h2>
+
+    <div *ngIf="errorMessage" class="alert alert-danger">{{ errorMessage }}</div>
+    <div *ngIf="successMessage" class="alert alert-success">{{ successMessage }}</div>
+
+    <form (ngSubmit)="onSubmit()" *ngIf="!loading">
+      <div class="mb-3">
+        <label for="content" class="form-label">Текст заметки</label>
+        <textarea id="content"
+                  class="form-control"
+                  rows="10"
+                  [(ngModel)]="content"
+                  name="content"
+                  required></textarea>
+      </div>
+
+      <button type="submit" class="btn btn-primary" [disabled]="loading">
+        <span *ngIf="loading" class="spinner-border spinner-border-sm me-2"></span>
+        Сохранить
+      </button>
+      <a routerLink="/my-notes" class="btn btn-outline-secondary ms-2">Отмена</a>
+    </form>
+  </div>
+</div>

@@ -41,6 +41,9 @@
             </div>
           </div>
           <div class="btn-group">
+            <a [routerLink]="['/edit', note.shortCode]" class="btn btn-outline-primary btn-sm">
+              ✏️
+            </a>
             <a [routerLink]="['/note', note.shortCode]" class="btn btn-outline-primary btn-sm">👁️</a>
             <button class="btn btn-outline-danger btn-sm"
                     (click)="deleteNote(note.shortCode)"

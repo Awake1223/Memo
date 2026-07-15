@@ -40,4 +40,10 @@ export class NoteService {
       headers: this.getHeaders()
     });
   }
+
+  updateNote(shortCode: string, content: string): Observable<any> {
+    return this.http.put(`${this.apiUrl}/${shortCode}`, { content }, {
+      headers: this.getHeaders()
+    });
+  }
 }

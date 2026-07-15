@@ -14,6 +14,7 @@ import { ViewNoteComponent } from './pages/view-note/view-note.component';
 import { MyNotesComponent } from './pages/my-notes/my-notes.component';
 import { LoginComponent } from './pages/login/login.component';
 import { RegisterComponent } from './pages/register/register.component';
+import { EditNoteComponent } from './pages/edit-note/edit-note.component';
 
 // Interceptors
 import { AuthInterceptor } from './interceptors/auth.interceptor';
@@ -26,7 +27,8 @@ import { AuthInterceptor } from './interceptors/auth.interceptor';
     ViewNoteComponent,
     MyNotesComponent,
     LoginComponent,
-    RegisterComponent
+    RegisterComponent,
+    EditNoteComponent,
   ],
   imports: [
     BrowserModule,

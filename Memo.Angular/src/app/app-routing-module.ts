@@ -6,6 +6,7 @@ import { MyNotesComponent } from './pages/my-notes/my-notes.component';
 import { LoginComponent } from './pages/login/login.component';
 import { RegisterComponent } from './pages/register/register.component';
 import { AuthGuard } from './guards/auth.guard';
+import { EditNoteComponent } from './pages/edit-note/edit-note.component';
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -13,6 +14,7 @@ const routes: Routes = [
   { path: 'my-notes', component: MyNotesComponent, canActivate: [AuthGuard] },
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
+  { path: 'edit/:shortCode', component: EditNoteComponent, canActivate: [AuthGuard] },
   { path: '**', redirectTo: '' }
 ];
 
