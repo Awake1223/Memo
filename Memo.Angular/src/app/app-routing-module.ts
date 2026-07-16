@@ -11,7 +11,7 @@ import { EditNoteComponent } from './pages/edit-note/edit-note.component';
 const routes: Routes = [
   { path: '', component: HomeComponent },
   { path: 'note/:shortCode', component: ViewNoteComponent },
-  { path: 'my-notes', component: MyNotesComponent, canActivate: [AuthGuard] },
+  { path: 'my-notes', component: MyNotesComponent},
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
   { path: 'edit/:shortCode', component: EditNoteComponent, canActivate: [AuthGuard] },

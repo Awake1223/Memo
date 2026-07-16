@@ -29,7 +29,9 @@ export class AuthService {
   }
 
   isAuthenticated(): boolean {
-    return !!this.getToken();
+    const token = this.getToken();
+    console.log('Token in isAuthenticated:', token); // <-- ДОБАВЬ
+    return !!token;
   }
 
   logout(): void {
