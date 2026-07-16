@@ -5,7 +5,6 @@ import { AuthService } from '../../services/auth.service';
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
-  standalone: false,
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent {
@@ -28,14 +27,21 @@ export class LoginComponent {
     this.loading = true;
     this.errorMessage = '';
 
-    this.authService.login(data).subscribe({
+    const loginData = {
+      email: this.email,
+      password: this.password
+    };
+
+    this.authService.login(loginData).subscribe({
       next: (response) => {
-        console.log('Login response:', response); // <-- Проверь, что приходит
-        this.authService.saveToken(response.token); // <-- ЭТО ГЛАВНОЕ!
+        console.log('Login response:', response);
+        this.authService.saveToken(response.token);
+        this.loading = false;
         this.router.navigate(['/']);
       },
       error: (err) => {
-        this.errorMessage = 'Неверный email или пароль';
+        this.errorMessage = err.error?.message || 'Неверный email или пароль';
+        this.loading = false;
       }
     });
   }
