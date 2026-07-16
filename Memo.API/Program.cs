@@ -81,6 +81,22 @@ builder.Services.AddScoped<ISearchService, SearchService>();
 builder.Services.AddHostedService<CleanupBackgroundService>();
 builder.Services.AddHostedService<TrendingNotesService>();
 
+builder.Services.AddCors(options =>
+{
+    options.AddDefaultPolicy(policy =>
+    {
+        policy.WithOrigins(
+            "https://dazzling-klepon-10de3d.netlify.app",  // Твой фронтенд
+            "https://memo-notes.netlify.app",               // Если переименуешь
+            "https://dazzling-klepon-10de3d.netlify.app/"
+        )
+        .AllowAnyMethod()
+        .AllowAnyHeader()
+        .AllowCredentials();
+    });
+});
+
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -91,7 +107,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
+app.UseCors();
 app.UseAuthentication();
 app.UseAuthorization();
 
