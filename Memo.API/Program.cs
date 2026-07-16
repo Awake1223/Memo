@@ -85,14 +85,9 @@ builder.Services.AddCors(options =>
 {
     options.AddDefaultPolicy(policy =>
     {
-        policy.WithOrigins(
-            "https://dazzling-klepon-10de3d.netlify.app",  // Твой фронтенд
-            "https://memo-notes.netlify.app",               // Если переименуешь
-            "https://dazzling-klepon-10de3d.netlify.app/"
-        )
-        .AllowAnyMethod()
-        .AllowAnyHeader()
-        .AllowCredentials();
+        policy.AllowAnyOrigin()
+              .AllowAnyMethod()
+              .AllowAnyHeader();
     });
 });
 

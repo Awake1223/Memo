@@ -28,18 +28,14 @@ export class LoginComponent {
     this.loading = true;
     this.errorMessage = '';
 
-    this.authService.login({
-      email: this.email,
-      password: this.password
-    }).subscribe({
+    this.authService.login(data).subscribe({
       next: (response) => {
-        this.authService.saveToken(response.token);
-        this.loading = false;
+        console.log('Login response:', response); // <-- Проверь, что приходит
+        this.authService.saveToken(response.token); // <-- ЭТО ГЛАВНОЕ!
         this.router.navigate(['/']);
       },
       error: (err) => {
-        this.errorMessage = err.error?.message || 'Неверный email или пароль';
-        this.loading = false;
+        this.errorMessage = 'Неверный email или пароль';
       }
     });
   }
