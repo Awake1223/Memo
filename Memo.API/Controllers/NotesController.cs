@@ -51,7 +51,7 @@ namespace Memo.API.Controllers
             });
         }
 
-       // [Authorize]
+        [Authorize]
         [HttpGet("my")]
         public async Task<IActionResult> GetMyNotes()
         {
