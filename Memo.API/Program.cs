@@ -23,7 +23,7 @@ builder.Services.AddScoped<INoteRepository, NoteRepository>();
 builder.Services.AddScoped<ITagRepository, TagRepository>();
 
 // JWT
-var jwtKey = builder.Configuration["Jwt:Key"] ?? throw new Exception("JWT Key is not configured");
+var jwtKey = "LrMC3k1hXknl8brbdc7jCmLhRwfrPEnaIceyeIa59No";
 var jwtIssuer = builder.Configuration["Jwt:Issuer"] ?? "MemoAPI";
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)

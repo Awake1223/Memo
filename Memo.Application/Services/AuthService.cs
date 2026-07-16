@@ -57,7 +57,7 @@ namespace Memo.Application.Services
 
         private string GenerateJwtToken(UserEntity user)
         {
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]!));
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("LrMC3k1hXknl8brbdc7jCmLhRwfrPEnaIceyeIa59No"));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
             var claims = new[]
