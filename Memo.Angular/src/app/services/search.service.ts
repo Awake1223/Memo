@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { NoteResponse } from '../models/note.models';
 import { AuthService } from './auth.service';
+import { environment } from '../environments/environment.prod';
 
 export interface SearchParams {
   query?: string;
@@ -16,7 +17,7 @@ export interface SearchParams {
   providedIn: 'root'
 })
 export class SearchService {
-  private apiUrl = '/api/Search';
+  private apiUrl = `${environment.apiUrl}/Search`;
 
   constructor(
     private http: HttpClient,

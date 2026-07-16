@@ -3,12 +3,13 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { CreateNoteRequest, NoteResponse, CreateNoteResponse } from '../models/note.models';
 import { AuthService } from './auth.service';
+import { environment } from '../environments/environment.prod';
 
 @Injectable({
   providedIn: 'root'
 })
 export class NoteService {
-  private apiUrl = '/api/Notes';
+  private apiUrl = `${environment.apiUrl}/Notes`;
 
   constructor(private http: HttpClient, private authService: AuthService) { }
 

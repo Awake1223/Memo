@@ -3,12 +3,13 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { TagDto } from '../models/tag.models';
 import { AuthService } from './auth.service';
+import { environment } from '../environments/environment.prod';
 
 @Injectable({
   providedIn: 'root'
 })
 export class TagService {
-  private apiUrl = '/api/Tags';
+  private apiUrl = `${environment.apiUrl}/Tags`;
 
   constructor(
     private http: HttpClient,
