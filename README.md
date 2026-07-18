@@ -96,18 +96,14 @@ Node.js 20+
 Angular CLI (npm install -g @angular/cli)
 
 1. Клонирование
-bash
 git clone https://github.com/Awake1223/Memo.git
 cd Memo
 2. Настройка базы данных
-Создай базу данных PostgreSQL:
-
-sql
+Создайте базу данных PostgreSQL:
 CREATE DATABASE MiniPastebin;
 3. Настройка бэкенда
 Создай Memo.API/appsettings.Development.json:
 
-json
 {
   "ConnectionStrings": {
     "DefaultConnection": "Host=localhost;Port=5432;Database=MiniPastebin;Username=postgres;Password=твой_пароль"
@@ -124,7 +120,6 @@ json
   }
 }
 4. Запуск бэкенда
-bash
 cd Memo.Infrastructure
 dotnet ef database update
 
@@ -134,7 +129,6 @@ dotnet run
 Swagger: https://localhost:7117/swagger
 
 5. Запуск фронтенда
-bash
 cd Memo.Angular
 npm install
 ng serve --open
